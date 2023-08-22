@@ -1,3 +1,4 @@
+/*
 // 파일 합치기
 // 11066
 
@@ -19,7 +20,7 @@ int main()
     std::vector<int> sum;
     std::vector<std::vector<int>> DP;
     sum.resize(K + 1, 0);
-    DP.resize(K + 1, std::vector<int>(K + 2, 0));
+    DP.resize(K + 1, std::vector<int>(K + 1, 0));
 
     for (int i = 1; i <= K; i++)
     {
@@ -46,3 +47,4 @@ int main()
 
   return 0;
 }
+*/
