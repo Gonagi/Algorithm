@@ -170,6 +170,8 @@ int check_fall_count(std::queue<Direction> &fall_cluster_que, const std::vector<
     {
       if (map[check_next.y][check_next.x] == '.')
         check_tmp++;
+      if (check_tmp >= check_count)
+        break;
       else if (map[check_next.y][check_next.x] == 'x' && visited[check_next.y][check_next.x])
         break;
 
