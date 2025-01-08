@@ -5,7 +5,14 @@ public class Solution {
 	static final Direction[] DIRECTIONS = {
 			new Direction(1,0), new Direction(-1,0), new Direction(0,1), new Direction(0,-1)
 	};
-	
+	static final class Direction{
+		final int y,x;
+		
+		public Direction(final int y, final int x) {
+			this.y = y;
+			this.x = x;
+		}
+	}
 	static Scanner sc = new Scanner(System.in);
 	static int N;
 	static int map[][] = new int[MAX][MAX];
@@ -16,11 +23,12 @@ public class Solution {
 		
 		for(int testCase = 1; testCase <= T; testCase++) {
 			inputMap();
-			bfs(testCase);
+			int result = bfs(testCase);
+			System.out.printf("#%d %d\n", testCase, result);
 		}
 	}
 
-	private static void bfs(int testCase) {
+	private static int bfs(int testCase) {
 		int count[][] = new int[MAX][MAX];
 		Queue<Direction> que = new LinkedList<>();
 		count[start.y][start.x]++; 
@@ -36,11 +44,6 @@ public class Solution {
 	            if (isDestination(next, count, cur)) {
 	            	break;
 	            }
-				if(next.y == end.y && next.x == end.x) {
-					count[next.y][next.x] = (count[next.y][next.x] == 0) ?
-							count[cur.y][cur.x] + 1 : Math.min(count[next.y][next.x], count[cur.y][cur.x] + 1);
-					break;
-				}
 		        if (map[next.y][next.x] == 2) {
 	                processPortal(cur, next, count, que);
 	                continue;
@@ -48,7 +51,7 @@ public class Solution {
 	            processNormalMove(cur, next, count, que);
 			}
 		}
-		System.out.printf("#%d %d\n", testCase, count[end.y][end.x] - 1);
+		return count[end.y][end.x] - 1;
 	}
 
 	private static void processPortal(final Direction cur, final Direction next, int[][] count, Queue<Direction> que) {
@@ -66,16 +69,16 @@ public class Solution {
 	    addQue(next, count, que, nextCount);
 	}
 
-	private static void processNormalMove(final Direction cur, final Direction next, int[][] count, Queue<Direction> queue) {
+	private static void processNormalMove(final Direction cur, final Direction next, int[][] count, Queue<Direction> que) {
 	    int nextCount = count[cur.y][cur.x] + 1;
 
-	    addQue(next, count, queue, nextCount);
+	    addQue(next, count, que, nextCount);
 	}
 
-	private static void addQue(final Direction next, int[][] count, Queue<Direction> queue, int nextCount) {
-		if (count[next.y][next.x] == 0 || count[next.y][next.x] > nextCount) {
+	private static void addQue(final Direction next, final int[][] count, final Queue<Direction> que, int nextCount) {
+	    if (count[next.y][next.x] == 0 || count[next.y][next.x] > nextCount) {
 	        count[next.y][next.x] = nextCount;
-	        queue.add(next);
+	        que.add(next);
 	    }
 	}
 	
@@ -86,7 +89,7 @@ public class Solution {
 	    return true;
 	}
 	
-	private static boolean isDestination(final Direction next, int[][] count, final Direction cur) {
+	private static boolean isDestination(final Direction next, final int[][] count, final Direction cur) {
 		if(next.y == end.y && next.x == end.x) {
 			if(count[next.y][next.x] == 0) {
 				count[next.y][next.x] = count[cur.y][cur.x] + 1;
@@ -108,14 +111,5 @@ public class Solution {
 		
 		start = new Direction(sc.nextInt(), sc.nextInt());
 		end = new Direction(sc.nextInt(), sc.nextInt());
-	}
-	
-	static class Direction{
-		int y,x;
-		
-		public Direction(final int y, final int x) {
-			this.y = y;
-			this.x = x;
-		}
 	}
 }
