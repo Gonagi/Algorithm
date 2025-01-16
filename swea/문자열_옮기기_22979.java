@@ -3,36 +3,38 @@ import java.util.*;
 
 public class Solution {
     static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static String string;
+    static StringBuilder sb;
     static int[] cases;
 
     public static void main(String[] args) throws Exception {
-	    int T = Integer.parseInt(br.readLine().trim());
-	
+		int T = Integer.parseInt(br.readLine().trim());
+
 	    for (int testCase = 0; testCase < T; testCase++) {
-	        string = br.readLine().trim();
-	        int size = string.length();
-	        int count = Integer.parseInt(br.readLine());
-	        cases = Arrays.stream(br.readLine().trim().split(" ")).mapToInt(Integer::parseInt).toArray();
-	
-	        for (int input : cases) {
-    			input %= size;
-	        	if(input == 0) {
-	        		continue;
-	        	}
-	        	if(input > 0) {
-	        		string = change(input);
-	        	}else {
-	        		string = change(size + input);
-	        	}
-	        }
-	        System.out.println(string);
-	    }
+		    sb = new StringBuilder(br.readLine().trim());
+			int size = sb.length();
+	        cases = Arrays.stream(br.readLine().trim().split(" "))
+						  .mapToInt(Integer::parseInt).
+						  toArray();
+
+			for (int input : cases) {
+				input %= size;
+				if (input == 0) {
+					continue;
+				}
+				if (input > 0) {
+					change(input, size);
+				} else {
+					change(size + input, size);
+				}
+			}
+			System.out.println(sb.toString());
+		}
     }
 
-	private static String change(final int input) {
-		String frontString = string.substring(input);
-		String backString = string.substring(0, input);
-		return frontString + backString;
-	}
+    private static void change(final int input, final int size) {
+		String frontString = sb.substring(input);
+		String backString = sb.substring(0, input);
+		sb.delete(0, size);
+		sb.append(frontString).append(backString);
+    }
 }
