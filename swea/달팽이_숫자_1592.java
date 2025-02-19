@@ -1,84 +1,54 @@
-import java.util.*;
+import java.io.*;
 
-public class Main {
-	static Direction[] dir = {new Direction(0,1), new Direction(1,0),
-						new Direction(0,-1), new Direction(-1, 0)};
-	static int n;
+public class Solution {
+	static int N;
 	static int[][] map;
+	static int[][] directions = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
-	public static void main(String args[]) throws Exception
-	{
-		Scanner sc = new Scanner(System.in);
-		int T;
-		T=sc.nextInt();
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-		for(int test_case = 1; test_case <= T; test_case++)
-		{
-			n = sc.nextInt();
-			int num = 1;
-			map = new int[n][n];
-			
-			for(int y = 0; y < n; y++) {
-				Arrays.fill(map[y], 0);
-			}
-			
-			Direction cur = new Direction(0, 0);
-			int d = 0;
-			
-			while(num <= n * n) {
-				map[cur.y][cur.x] = num;
+		int T = Integer.parseInt(br.readLine());
 
-				if(num == n*n)
-					break;
-				
-				Direction next = new Direction(cur.y + dir[d].y, cur.x + dir[d].x);
-				if(canMovable(next)) {
-					cur = next;
-					num++;
-				}else {
-					d++;
-					if(d == 4) {
-						d = 0;
-					}
+		for (int testCase = 1; testCase <= T; testCase++) {
+			N = Integer.parseInt(br.readLine());
+			map = new int[N][N];
+
+			int curY = 0, curX = 0;
+			int dirIdx = 0;
+			map[curY][curX] = 1;
+			for (int num = 2; num <= N * N; num++) {
+				int nextY = curY + directions[dirIdx][0];
+				int nextX = curX + directions[dirIdx][1];
+
+				if (!canMove(nextY, nextX) || map[nextY][nextX] != 0) {
+					dirIdx = (dirIdx + 1) % 4;
+					nextY = curY + directions[dirIdx][0];
+					nextX = curX + directions[dirIdx][1];
 				}
+				map[nextY][nextX] = num;
+				curY = nextY;
+				curX = nextX;
 			}
-			
-			System.out.println("#" + test_case);
-			for(int y = 0; y < n; y++) {
-				for(int x = 0; x < n; x++) {
-					System.out.print(map[y][x] + " ");
+
+			bw.write("#" + testCase + "\n");
+			for (int y = 0; y < N; y++) {
+				for (int x = 0; x < N; x++) {
+					bw.write(map[y][x] + " ");
 				}
-				System.out.println();
+				bw.newLine();
 			}
 		}
-	}
-	
-	static void dfs(Direction cur, int num) {
-		map[cur.y][cur.x] = num;
-		if(num == n*n)
-			return;
 
-		for(int d = 0; d < 4; d++) {
-			Direction next = new Direction(cur.y + dir[d].y, cur.x + dir[d].x);
-			if(canMovable(next)) {
-				dfs(next, num + 1);
-			}
-		}
-	}
-	
-	static boolean canMovable(Direction cur) {
-		if(cur.y < 0 || cur.y >= n ||  cur.x < 0 || cur.x >= n 
-				|| map[cur.y][cur.x]!= 0 )
-			return false;
-		return true;
+		bw.flush();
+		bw.close();
+		br.close();
+
 	}
 
-	static class Direction{
-		int y, x;
-		
-		Direction(int y, int x){
-			this.y = y;
-			this.x = x;
-		}
+	static boolean canMove(int y, int x) {
+		return y >= 0 && y < N && x >= 0 && x < N;
 	}
 }
+
