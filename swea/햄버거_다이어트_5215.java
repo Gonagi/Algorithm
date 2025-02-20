@@ -1,45 +1,47 @@
+import java.io.*;
 import java.util.*;
-
-class Solution
-{
-	static int[][] info;
-	static int max = 0;
-	static int N;
-	static int limit;
-
-	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
-		
-		for(int test_case = 1; test_case <= T; test_case++) {
-			N = sc.nextInt();
-			limit = sc.nextInt();
-			info = new int[N][2];
-
-			max = 0;
-			
-			for(int idx = 0; idx < N; idx++) {
-				info[idx][0] = sc.nextInt();
-				info[idx][1] = sc.nextInt();
-			}
-			
-			dfs(0, 0, 0);
-
-			System.out.printf("#%d %d\n", test_case, max);
-		}
-	}
-	
-	static void dfs(int score, int sum, int check) {
-		if(sum > limit) {
-			return;
-		}
-		
-		if(max < score) {
-			max = score;
-		}
-		
-        for (int i =check; i < N; i++) {
-            dfs(score + info[i][0], sum + info[i][1], i + 1);
+ 
+public class Solution {
+    static int N, L, result;
+    static int[] scores, calories;
+ 
+    public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int T = Integer.parseInt(br.readLine());
+ 
+        for (int testCase = 1; testCase <= T; testCase++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            N = Integer.parseInt(st.nextToken());
+            L = Integer.parseInt(st.nextToken());
+            scores = new int[N];
+            calories = new int[N];
+            result = 0;
+            for (int idx = 0; idx < N; idx++) {
+                st = new StringTokenizer(br.readLine());
+                scores[idx] = Integer.parseInt(st.nextToken());
+                calories[idx] = Integer.parseInt(st.nextToken());
+            }
+            solve(0, 0, 0);
+            bw.write("#" + testCase + " " + result + "\n");
         }
-	}
+ 
+        bw.flush();
+        br.close();
+        bw.close();
+    }
+ 
+    static void solve(int start, int totalScores, int totalCalories) {
+        result = Math.max(result, totalScores);
+ 
+        for (int idx = start; idx < N; idx++) {
+            int nextScore = totalScores + scores[idx];
+            int nextCalories = totalCalories + calories[idx];
+            if (nextCalories > L) {
+                continue;
+            }
+            solve(idx + 1, nextScore, nextCalories);
+        }
+    }
 }
+
